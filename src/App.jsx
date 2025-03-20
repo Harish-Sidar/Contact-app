@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/Navbar'
 import { IoSearch } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
-import { collection } from 'firebase/firestore'
+import { FaRegUserCircle } from "react-icons/fa";
+import { collection,getDocs } from 'firebase/firestore'
 import { db } from './Config/Firebase'
+
 
 function App() { 
 
@@ -18,9 +20,17 @@ function App() {
 
         const contactsRef = collection(db,"contacts")
         const contactsSnapshot = await getDocs(contactsRef)
-        console.log(contactsSnapshot)
+        const contactLists = contactsSnapshot.docs.map((doc)=>{
+          return{
+            id:doc.id,
+            ...doc.data(),
+
+          }
+        })
+        setContacts(contactLists)
         
       } catch (error) {
+        console.log(error) 
         
       }
     }
@@ -45,9 +55,20 @@ function App() {
 
     
     </div>
+    <div>
+       {contacts.map((contact) => (
+        <div key = {contact.id}>
+          <FaRegUserCircle/>
+        </div>))
+
+        
+      } 
+      
+    </div>
     </div>
     </>
   )
 }
 
 export default App
+
