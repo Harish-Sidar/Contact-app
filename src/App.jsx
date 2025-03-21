@@ -5,20 +5,29 @@ import './App.css'
 import Navbar from './components/Navbar'
 import { IoSearch } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
-import { FaRegUserCircle } from "react-icons/fa";
 import { collection,getDocs } from 'firebase/firestore'
 import { db } from './Config/Firebase'
+import ContactCard from './components/ContactCard'
+import Modal from './components/Modal'
 
 
 function App() { 
 
   const [contacts, setContacts] = useState([])
+  const [isOpen, setOpen] = useState(false);
 
+  const onOpen = () =>{
+    setOpen(true);
+  }
+
+  const onClose = () =>{
+    setOpen(false);
+  }
   useEffect(() => {
     const getContacts = async () =>{
       try {
 
-        const contactsRef = collection(db,"contacts")
+        const contactsRef = collection(db,"contact")
         const contactsSnapshot = await getDocs(contactsRef)
         const contactLists = contactsSnapshot.docs.map((doc)=>{
           return{
@@ -51,21 +60,23 @@ function App() {
       <input type="text" className='h-10 flex-grow rounded-md border
        border-white bg-transparent text-white pl-9 ' />
     </div> 
-    <CiCirclePlus className='text-5xl cursor-pointer text-white' />
+    <CiCirclePlus onClick={onOpen} className='text-5xl cursor-pointer text-white' />
 
     
     </div>
-    <div>
+    <div className='mt-4 flex flex-col gap-3'>
        {contacts.map((contact) => (
-        <div key = {contact.id}>
-          <FaRegUserCircle/>
-        </div>))
+       <ContactCard key={contact.id} contact = {contact} />
+        
+      ))
 
         
       } 
       
     </div>
     </div>
+
+    <Modal isOpen={isOpen} onClose={onClose}>Hi</Modal>
     </>
   )
 }
