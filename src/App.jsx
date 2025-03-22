@@ -8,7 +8,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import { collection,getDocs } from 'firebase/firestore'
 import { db } from './Config/Firebase'
 import ContactCard from './components/ContactCard'
-import Modal from './components/Modal'
+import AddAndUpdate from './components/AddAndUpdate'
 
 
 function App() { 
@@ -68,15 +68,12 @@ function App() {
        {contacts.map((contact) => (
        <ContactCard key={contact.id} contact = {contact} />
         
-      ))
-
-        
+      ))     
       } 
       
     </div>
     </div>
-
-    <Modal isOpen={isOpen} onClose={onClose}>Hi</Modal>
+<AddAndUpdate onClose={onClose} isOpen={isOpen} />
     </>
   )
 }
