@@ -1,43 +1,42 @@
 import { useState,useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/Navbar'
 import { IoSearch } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
-import { collection,getDocs } from 'firebase/firestore'
+import { collection,getDocs, snapshotEqual,onSnapshot } from 'firebase/firestore'
 import { db } from './Config/Firebase'
 import ContactCard from './components/ContactCard'
 import AddAndUpdate from './components/AddAndUpdate'
+import UseDisclouse from './Hooks/UseDisclouse'
 
 
 function App() { 
 
   const [contacts, setContacts] = useState([])
-  const [isOpen, setOpen] = useState(false);
 
-  const onOpen = () =>{
-    setOpen(true);
-  }
+  const {isOpen,onClose,onOpen} = UseDisclouse(); 
 
-  const onClose = () =>{
-    setOpen(false);
-  }
+
   useEffect(() => {
     const getContacts = async () =>{
       try {
 
         const contactsRef = collection(db,"contact")
-        const contactsSnapshot = await getDocs(contactsRef)
-        const contactLists = contactsSnapshot.docs.map((doc)=>{
+
+      onSnapshot(contactsRef,(snapshot)=>{ 
+
+        const contactLists = snapshot.docs.map((doc)=>{
           return{
             id:doc.id,
             ...doc.data(),
 
           }
         })
-        setContacts(contactLists)
-        
+        setContacts(contactLists);
+        return contactLists;
+
+      })
+    
       } catch (error) {
         console.log(error) 
         

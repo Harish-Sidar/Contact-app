@@ -4,8 +4,12 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { RiEditCircleLine } from "react-icons/ri";
 import { db } from '../Config/Firebase';
+import AddAndUpdate from './AddAndUpdate';
+import UseDisclouse from '../Hooks/UseDisclouse';
 
 function ContactCard ({contact}) {
+    const {isOpen,onClose,onOpen} = UseDisclouse(); 
+  
 
 const deleteContact = async(id)=>{
   try { 
@@ -19,7 +23,9 @@ const deleteContact = async(id)=>{
 }
 
   return (
-    <div key = {contact.id} className='flex 
+    <>
+    <div 
+    key = {contact.id} className='flex 
     items-center justify-between bg-yellow-100 rounded-lg p-2' >
      <div className='flex gap-1'>
      <FaRegUserCircle className='text-4xl text-orange-300'/>
@@ -30,10 +36,13 @@ const deleteContact = async(id)=>{
       </div> 
      </div>
       <div className='flex text-3xl cursor-pointer'>
-      <RiEditCircleLine />
+      <RiEditCircleLine onClick={onOpen}  />
         <MdDelete onClick={()=>deleteContact(contact.id)} className='text-orange-400 '/>
       </div>
     </div>
+    <AddAndUpdate contact={contact} isUpdate isOpen={isOpen} onClose={onClose} />
+    </>
+    
 )
 }
 
